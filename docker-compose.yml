@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  traefik:
+    image: traefik:v3.0
+    command:
+      - "--api.insecure=true"  # Enables Traefik's API (insecure for development)
+      - "--providers.docker=true"  # Enables Docker provider for dynamic configuration
+      - "--entrypoints.web.address=:80"  # Configures entry point for HTTP traffic
+    ports:
+      - "80:80"  # Exposes port 80 on the host for HTTP traffic
+      - "8080:8080"  # Exposes port 8080 on the host for Traefik dashboard
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # Mounts Docker socket for dynamic configuration
+    labels:
+      - "traefik.http.middlewares.my-cache.cache.maxSize=10000"
+      - "traefik.http.middlewares.my-cache.cache.defaultTTL=5m"
+
+  service-1:
+    build:
+      context: service-1
+    labels:
+      - "traefik.enable=true"  # Enables Traefik for this service
+      - "traefik.http.routers.spring.rule=Host(`localhost`)"  # Defines the routing rule based on the host
+      - "traefik.http.services.spring.loadbalancer.server.port=9090"  # Specifies the port where your app is running
+
+    ports:
+      - "9090:9090"  # Exposes port 9090 on the host for your Spring app
+
+  service-2:
+    build:
+      context: service-2
+    labels:
+      - "traefik.enable=true"  # Enables Traefik for this service
+      - "traefik.http.routers.spring.rule=Host(`localhost`)"  # Defines the routing rule based on the host
+      - "traefik.http.services.spring.loadbalancer.server.port=9091"  # Specifies the port where your app is running
+
+    ports:
+      - "9091:9091"  # Exposes port 9090 on the host for your Spring app
+
+  service-3:
+    build:
+      context: service-3
+    labels:
+      - "traefik.enable=true"  # Enables Traefik for this service
+      - "traefik.http.routers.spring.rule=Host(`localhost`)"  # Defines the routing rule based on the host
+      - "traefik.http.services.spring.loadbalancer.server.port=9092"  # Specifies the port where your app is running
+    ports:
+      - "9092:9092"  # Exposes port 9090 on the host for your Spring app
