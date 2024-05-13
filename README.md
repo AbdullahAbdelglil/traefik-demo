@@ -2,7 +2,7 @@
 To use this app follow me
 1- clone this repo: `https://github.com/AbdullahAbdelglil/traefik-demo.git`
 
-2- write these commands in your cmd:
+2- write these commands in your cmd: <br>
   1- `cd traefik-demo` <br> 
   2- `docker-compose up -d` <br>
  
